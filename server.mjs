@@ -8,11 +8,40 @@ import {
   generateMatch, statistics, detectMoment,
   detectPlayerMoment, teams, players
 } from './public/engine.js';
-let config={};try{config=JSON.parse((await readFile(new URL('./.azure.local.json',import.meta.url),'utf8')).replace(/^\uFEFF/,''));}catch{}
+let config = {
+  key: process.env.AZURE_AI_API_KEY
+};
+
+if (!config.key) {
+  try {
+    const savedConfig = await readFile(
+      new URL('./.azure.local.json', import.meta.url),
+      'utf8'
+    );
+
+    config = JSON.parse(savedConfig.replace(/^\uFEFF/, ''));
+  } catch {
+    // Azure uses environment settings; local development uses the file.
+  }
+}
 let busy=false,lastCall=0;
 async function api(req,res){
  const reply=(code,data)=>{res.writeHead(code,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
- if(req.headers.origin&&req.headers.origin!=='http://127.0.0.1:3000'&&req.headers.origin!=='http://localhost:3000')return reply(403,{error:'Origin not allowed'});
+ const allowedOrigins = new Set([
+  'http://127.0.0.1:3000',
+  'http://localhost:3000'
+]);
+
+if (process.env.WEBSITE_HOSTNAME) {
+  allowedOrigins.add(`https://${process.env.WEBSITE_HOSTNAME}`);
+}
+
+if (
+  req.headers.origin &&
+  !allowedOrigins.has(req.headers.origin)
+) {
+  return reply(403, {error: 'Origin not allowed'});
+}
  if(req.method==='GET'&&req.url==='/api/status')return reply(200,{configured:Boolean(config.key)});
  if (
   req.method !== 'POST' ||
@@ -127,5 +156,9 @@ if (wordCount > (isRecap ? 100 : 60) || containsInternalLabels) {
  }catch{return reply(502,{error:'Could not complete the Azure request. Check your connection and local configuration.'});}finally{busy=false;}
 }
 const root=new URL('./public/',import.meta.url);
-http.createServer(async(req,res)=>{if(req.url.startsWith('/api/'))return api(req,res);try{const path=decodeURIComponent(new URL(req.url,'http://localhost').pathname);const file=new URL('.'+(path==='/'?'/index.html':path),root);if(!file.href.startsWith(root.href)){res.writeHead(403).end();return;}const data=await readFile(fileURLToPath(file));res.writeHead(200,{'Content-Type':file.pathname.endsWith('.js')?'text/javascript':file.pathname.endsWith('.css')?'text/css':'text/html'});res.end(data);}catch{res.writeHead(404).end('Not found');}}).listen(3000,'127.0.0.1',()=>console.log('MatchLens: http://127.0.0.1:3000'));
+http.createServer(async(req,res)=>{if(req.url.startsWith('/api/'))return api(req,res);try{const path=decodeURIComponent(new URL(req.url,'http://localhost').pathname);const file=new URL('.'+(path==='/'?'/index.html':path),root);if(!file.href.startsWith(root.href)){res.writeHead(403).end();return;}const data=await readFile(fileURLToPath(file));res.writeHead(200,{'Content-Type':file.pathname.endsWith('.js')?'text/javascript':file.pathname.endsWith('.css')?'text/css':'text/html'});res.end(data);}catch{res.writeHead(404).end('Not found');}}).listen(
+  Number(process.env.PORT || 3000),
+  process.env.WEBSITE_HOSTNAME ? '0.0.0.0' : '127.0.0.1',
+  () => console.log('MatchLens server is running')
+);
 
