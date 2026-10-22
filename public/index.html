@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MatchLens · Beyond the scoreline</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header><a class="brand" href="/">◉ <b>MatchLens</b></a><span>THE GAME, EXPLAINED.</span><small>● SYNTHETIC MATCH
+            LAB</small></header>
+    <main>
+        <div class="intro">
+            <div>
+                <p class="eyebrow">EVERY MATCH HAS A DEEPER STORY</p>
+                <h1>THE GAME!<br>A deeper look...</h1>
+                <p>Have a good grasp of what your eyes can't tell.</p>
+            </div>
+            <div class="status">LOCAL PROTOTYPE<br><strong>Rules preview</strong><br><span>Azure AI connection
+                    pending</span></div>
+        </div>
+        <section class="preferences" aria-label="Viewing preferences"><label>Your perspective<select id="mode">
+                    <option value="casual">The fan · Plain language</option>
+                    <option value="analyst">The analyst · Evidence & numbers</option>
+                    <option value="player">Player focus · Individual involvement</option>
+                </select></label><label>Follow a player<select id="player"></select></label><label>Story language<select
+                    id="language">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                </select></label></section>
+        <div class="layout">
+            <section class="match panel">
+                <div class="matchtop"><span>FICTIONAL FRIENDLY / MATCH 001</span><b id="clock">00:00</b></div>
+                <div class="score">
+                    <div><i class="badge home">N</i>
+                        <h2>Northbridge FC</h2>
+                    </div><strong id="score">0 : 0</strong>
+                    <div><i class="badge away">H</i>
+                        <h2>Harbour Athletic</h2>
+                    </div>
+                </div>
+                <div class="pitch"><svg viewBox="0 0 100 64" role="img"
+                        aria-label="Synthetic event pitch; ball position reflects the latest event">
+                        <defs>
+                            <pattern id="grass" width="20" height="64" patternUnits="userSpaceOnUse">
+                                <rect width="10" height="64" fill="#ffffff" opacity=".025" />
+                            </pattern>
+                        </defs>
+                        <rect width="100" height="64" fill="url(#grass)" />
+                        <g fill="none" stroke="#afd9bb" stroke-width=".3" opacity=".65">
+                            <rect x="4" y="4" width="92" height="56" />
+                            <path d="M50 4V60" />
+                            <circle cx="50" cy="32" r="8" />
+                            <path d="M4 17H19V47H4 M96 17H81V47H96 M4 25H9V39H4 M96 25H91V39H96" />
+                        </g>
+                        <g id="dots"></g>
+                        <path id="trail" stroke="#d3fa78" stroke-width=".65" stroke-dasharray="1 1" />
+                        <circle id="ball" cx="50" cy="32" r="1.1" fill="white" stroke="#1b2420" stroke-width=".3" />
+                    </svg>
+                    <div class="pitchcaption" id="event">Ready for kick-off</div>
+                </div>
+                <div class="controls"><button id="play">▶ Play match</button><button id="reset" class="secondary">↺
+                        Restart</button><label>Replay speed<select id="speed">
+                            <option value="1">1×</option>
+                            <option value="3" selected>3×</option>
+                            <option value="10">10×</option>
+                        </select></label><span id="progress">0 / 0 events</span></div><input id="seek" type="range"
+                    min="0" value="0" aria-label="Seek through synthetic match">
+                <div class="stats" id="stats"></div>
+            </section>
+            <aside>
+                <section class="story panel">
+                    <p class="eyebrow">◈ THE MATCHLENS INSIGHT</p><span class="tag" id="storytime">WAITING FOR
+                        PLAY</span>
+                    <h2 id="headline"></h2>
+                    <p id="body" aria-live="polite"></p>
+                    <details>
+                        <summary>Why are we saying this?</summary>
+                        <div id="evidence"></div>
+                    </details>
+                    <p class="footnote">Based only on fictional events. Explanations currently use transparent rules.
+                    </p>
+                </section>
+                <section class="panel next">
+                    <p class="eyebrow">EXPLORE A TURNING POINT</p><button class="jump" data-minute="15">01
+                        <span>Pressure builds</span> ↗</button><button class="jump" data-minute="25">02 <span>A change
+                            of rhythm</span> ↗</button><button id="recap" class="jump">03 <span>Recap the match so
+                            far</span> ↗</button><button id="export" class="secondary">↓ Export overlay JSON</button>
+                </section>
+            </aside>
+        </div>
+        <section class="panel recap" id="recapbox" hidden>
+            <p class="eyebrow">YOUR MATCH RECAP · RULES PREVIEW</p>
+            <h2>The story so far</h2>
+            <p id="recaptext"></p>
+        </section>
+        <footer>100% synthetic football data · Fictional clubs & players · Built for Inside the Game <span>INGEST →
+                INTERPRET → EXPLAIN → RENDER → PERSONALIZE</span></footer>
+    </main>
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
