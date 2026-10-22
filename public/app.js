@@ -124,6 +124,14 @@ async function requestInsight() {
       `At ${time(result.clock)} · ${result.text} ` +
       'AI generated; event references checked, ' +
       'factual accuracy not fully validated.';
+      const displayedText = aiText.textContent;
+
+setTimeout(() => {
+  if (aiText.textContent === displayedText) {
+    aiText.textContent =
+      'Waiting for the next meaningful moment…';
+  }
+}, 8000);
   } catch (error) {
     aiText.textContent = error.message;
   } finally {
@@ -286,6 +294,9 @@ async function requestRecap() {
       `Recap through ${time(result.clock)} · ${result.text} ` +
       'AI generated; event references checked. ' +
       'Factual and numerical accuracy are not fully validated.';
+
+      const displayedText = aiText.textContent;
+
   } catch (error) {
     aiRecapText.textContent = error.message;
   } finally {
