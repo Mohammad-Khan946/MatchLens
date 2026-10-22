@@ -24,6 +24,20 @@ The Node.js application server and interface run locally. Model inference runs o
 
 Story selection uses deterministic rules; this version does not implement autonomous multi-agent orchestration.
 
+```mermaid
+flowchart LR
+  subgraph Local["Local computer"]
+    A["Synthetic match events"] --> B["Statistics and moment selection"]
+    B --> C["Node.js server"]
+    D["Fan, Analyst or Player focus<br/>English or Spanish"] --> C
+    C --> E["Length and event-reference checks"]
+    E --> F["Insight display and match recap"]
+  end
+
+  C -->|"Evidence and audience preferences"| G["Azure AI<br/>GPT-5-mini in Microsoft Foundry"]
+  G -->|"Generated explanation or recap"| C
+```
+
 ## Run locally
 
 Requires Node.js 24 LTS and access to an Azure model deployment.
